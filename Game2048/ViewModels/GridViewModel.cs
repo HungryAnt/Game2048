@@ -6,43 +6,55 @@ using Gods.Foundation;
 
 namespace Game2048.ViewModels
 {
-    public class GridViewModel : NotificationObject
+    public class GridViewModel
     {
-        private object _value;
+        public object Value { get; set; }
 
-        public object Value
-        {
-            get { return _value; }
-            set
-            {
-                _value = value;
-                RaisePropertyChanged("Value");
-            }
-        }
+        public int FromRow { get; set; }
 
-        private int _row;
+        public int FromCol { get; set; }
 
-        public int Row
-        {
-            get { return _row; }
-            set
-            {
-                _row = value;
-                RaisePropertyChanged("Row");
-            }
-        }
+        public int ToRow { get; set; }
 
-        private int _col;
+        public int ToCol { get; set; }
 
-        public int Col
-        {
-            get { return _col; }
-            set
-            {
-                _col = value;
-                RaisePropertyChanged("Col");
-            }
-        }
+        public GridState GridState { get; set; }
+
+//        private object _value;
+//
+//        public object Value
+//        {
+//            get { return _value; }
+//            set
+//            {
+//                _value = value;
+//                RaisePropertyChanged("Value");
+//            }
+//        }
+//
+//        private int _row;
+//
+//        public int Row
+//        {
+//            get { return _row; }
+//            set
+//            {
+//                _row = value;
+//                RaisePropertyChanged("Row");
+//            }
+//        }
+//
+//        private int _col;
+//
+//        public int Col
+//        {
+//            get { return _col; }
+//            set
+//            {
+//                _col = value;
+//                RaisePropertyChanged("Col");
+//            }
+//        }
 
 
     }

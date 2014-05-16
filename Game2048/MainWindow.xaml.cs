@@ -20,35 +20,15 @@ namespace Game2048
     /// </summary>
     public partial class MainWindow : Window
     {
-        private GameViewModel GameViewModel { get; set; }
-        
         public MainWindow()
         {
             InitializeComponent();
-
-            Init();
         }
 
-        private void Init()
+        private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
-            GameViewModel = new GameViewModel();
-            DataContext = GameViewModel;
-
-
-            AddItem();
-        }
-
-        private void AddItem()
-        {
-            Style style = FindResource("gameGridStyle") as Style;
-            Button button = new Button()
-                {
-                    Width = 50,
-                    Height = 50,
-                    Style = style
-                };
-
-            gameStagePanel.Children.Add(button);
+            gameStageControl.Init();
+            gameStageControl.Focus();
         }
     }
 }
