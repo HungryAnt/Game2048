@@ -2,7 +2,29 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" Height="374" Width="376">
+    <Window.Resources>
+        <Style x:Key="gameGridStyle" TargetType="ContentControl">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ContentControl">
+                        <Border Background="BlueViolet">
+                            <Viewbox Margin="5">
+                                <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Viewbox>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <Grid>
-        <Canvas></Canvas>
+        <Canvas x:Name="gameStagePanel"></Canvas>
+        <Button HorizontalAlignment="Center" VerticalAlignment="Center" Width="50" Height="50" Style="{StaticResource gameGridStyle}" Content="2">
+            <Button.ContentTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Path=Value}"/>
+                </DataTemplate>
+            </Button.ContentTemplate>
+        </Button>
     </Grid>
 </Window>

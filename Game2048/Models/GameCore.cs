@@ -53,17 +53,65 @@ namespace Game2048.Models
             return _gridData[row][col];
         }
 
+        public void MoveUp()
+        {
+            GridHolder[] gridHolders = new GridHolder[ROW_COUNT];
+
+            for (int col = 0; col < COL_COUNT; ++col)
+            {
+                int index = 0;
+
+                for (int row = 0; row < ROW_COUNT; ++row)
+                {
+                    gridHolders[index++] = GetGridHolder(row, col);
+                }
+
+                MoveGrid(gridHolders);
+            }
+        }
+
         public void MoveDown()
         {
             GridHolder[] gridHolders = new GridHolder[ROW_COUNT];
 
             for (int col = 0; col < COL_COUNT; ++col)
             {
-                for (int row = 0; row < ROW_COUNT; ++row)
+                int index = 0;
+                for (int row = ROW_COUNT-1; row >= 0; --row)
                 {
-                    gridHolders[row] = GetGridHolder(row, col);
-                    
+                    gridHolders[index++] = GetGridHolder(row, col);
                 }
+                MoveGrid(gridHolders);
+            }
+        }
+
+        public void MoveLeft()
+        {
+            GridHolder[] gridHolders = new GridHolder[ROW_COUNT];
+
+            for (int row = 0; row < ROW_COUNT; ++row)
+            {
+                int index = 0;
+                for (int col = 0; col < COL_COUNT; ++col)
+                {
+                    gridHolders[index++] = GetGridHolder(row, col);
+                }
+                MoveGrid(gridHolders);
+            }
+        }
+
+        public void MoveRight()
+        {
+            GridHolder[] gridHolders = new GridHolder[ROW_COUNT];
+
+            for (int row = 0; row < ROW_COUNT; ++row)
+            {
+                int index = 0;
+                for (int col = COL_COUNT-1; col >= 0; --col)
+                {
+                    gridHolders[index++] = GetGridHolder(row, col);
+                }
+                MoveGrid(gridHolders);
             }
         }
 
@@ -97,7 +145,8 @@ namespace Game2048.Models
                     gridHolders[top].SetGridEntity(currentGridEntity);
                     top = current;
                     currentGridEntity.IsMerged = true;
-
+                    currentGridEntity.IsMoved = true;
+                    topGridEntity.IsBeMerged = true;
                 }
             }
         }

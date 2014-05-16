@@ -44,7 +44,7 @@ namespace Game2048.Models
         /// <summary>
         /// 被合并的
         /// </summary>
-        public int IsBeMerged { get; set; }
+        public bool IsBeMerged { get; set; }
 
         /// <summary>
         /// 是否进行了移动
