@@ -28,7 +28,8 @@ namespace Game2048.Models
         {
             return new GridItem(owner)
                 {
-                    Value = RANDOM.Next(2) == 0 ? 4 : 2
+                    // 十分之一概率出4
+                    Value = RANDOM.Next(10) == 0 ? 4 : 2
                 };
         }
 
