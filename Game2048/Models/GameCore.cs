@@ -14,8 +14,6 @@ namespace Game2048.Models
 
         private GridHolder[][] _gridData;
 
-        //private List<KeyValuePair<GridItem, GridMoveInfo>> _gridMoveInfos = new List<KeyValuePair<GridItem, GridMoveInfo>>();
-
         private readonly Dictionary<GridItem, GridMoveInfo> _gridMoveInfoMap = new Dictionary<GridItem, GridMoveInfo>();
         private readonly HashSet<GridItem> _deletedGridItems = new HashSet<GridItem>(); 
         private readonly HashSet<GridItem> _newCreatedGridItems = new HashSet<GridItem>(); 
