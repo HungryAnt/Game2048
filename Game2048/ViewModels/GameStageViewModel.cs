@@ -33,8 +33,8 @@ namespace Game2048.ViewModels
                     {
                         Value = gridItem.Value,
                         Level = gridItem.Level,
-                        ToRow = gridItem.Owner.Row,
-                        ToCol = gridItem.Owner.Col,
+                        Row = gridItem.Owner.Row,
+                        Col = gridItem.Owner.Col,
                     };
 
                 GridMoveInfo moveInfo;
@@ -81,6 +81,12 @@ namespace Game2048.ViewModels
         public void MoveRight()
         {
             GameManager.Instance.GameCore.Move(MoveDirection.Right);
+            GenerateGirdViewModels();
+        }
+
+        public void EnlargeGrid(GridViewModel gridViewModel)
+        {
+            GameManager.Instance.GameCore.EnlargeGrid(gridViewModel.Row, gridViewModel.Col);
             GenerateGirdViewModels();
         }
     }

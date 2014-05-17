@@ -60,8 +60,8 @@ namespace Game2048.Views
                     }
                     else
                     {
-                        double locX = gridViewModel.ToCol * itemWidth;
-                        double locY = gridViewModel.ToRow * itemHeight;
+                        double locX = gridViewModel.Col * itemWidth;
+                        double locY = gridViewModel.Row * itemHeight;
                         Canvas.SetLeft(itemControl, locX);
                         Canvas.SetTop(itemControl, locY);
                     }
@@ -118,6 +118,29 @@ namespace Game2048.Views
             e.Handled = true;
         }
 
+        private void GameStagePanel_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (!Keyboard.IsKeyDown(Key.LeftCtrl))
+            {
+                return;
+            }
+
+            Button button = e.OriginalSource as Button;
+            if (button == null)
+            {
+                return;
+            }
+
+            GridViewModel gridViewModel = button.Content as GridViewModel;
+            if (gridViewModel == null)
+            {
+                return;
+            }
+
+            GameStageViewModel.EnlargeGrid(gridViewModel);
+            UpdateGridItems();
+        }
+
         private static DoubleAnimation CreateMoveAnimation(double from, double to)
         {
             return new DoubleAnimation(from, to, new Duration(TimeSpan.FromSeconds(0.1)));
@@ -165,7 +188,7 @@ namespace Game2048.Views
             itemControl.RenderTransform = scaleTransform;
 
             //itemControl.SetValue(UIElement.OpacityProperty, 0);
-            var opacityAnimation = new DoubleAnimation(0, 1, new Duration(TimeSpan.FromSeconds(0.1)));
+            var opacityAnimation = new DoubleAnimation(0, 1, new Duration(TimeSpan.FromSeconds(0.08)));
 
             itemControl.BeginAnimation(UIElement.OpacityProperty, opacityAnimation);
 
@@ -176,7 +199,7 @@ namespace Game2048.Views
 
         private static DoubleAnimation CreateRenderScaleAnimation()
         {
-            return new DoubleAnimation(0, 1, new Duration(TimeSpan.FromSeconds(0.2)))
+            return new DoubleAnimation(0, 1, new Duration(TimeSpan.FromSeconds(0.1)))
                 {
                     BeginTime = TimeSpan.FromSeconds(0)
                 };

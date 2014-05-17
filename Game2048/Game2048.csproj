@@ -100,7 +100,7 @@
   <ItemGroup>
     <Compile Include="Models\GameCore.cs" />
     <Compile Include="Models\GridHolder.cs" />
-    <Compile Include="Models\GridEntity.cs" />
+    <Compile Include="Models\GridItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

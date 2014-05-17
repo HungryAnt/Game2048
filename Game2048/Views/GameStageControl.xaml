@@ -25,12 +25,11 @@
             <Setter Property="ContentTemplate">
                 <Setter.Value>
                     <DataTemplate>
-<!--                        <Border Background="#FFECE0C8">-->
                         <Border>
                             <Border.Background>
                                 <SolidColorBrush Color="{Binding Path=Level,Converter={StaticResource gridBackColorConverter}}"/>
                             </Border.Background>
-                            <Viewbox Margin="5">
+                            <Viewbox Margin="5,7,5,7">
                                 <TextBlock Text="{Binding Path=Value}" FontWeight="Bold">
                                     <TextBlock.Foreground>
                                         <SolidColorBrush Color="{Binding Path=Level,Converter={StaticResource gridForeColorConverter}}"/>
@@ -45,9 +44,11 @@
         
     </UserControl.Resources>
     <Grid>
-        <Border Background="#FFB8AF9E" CornerRadius="10" Padding="0,0,10,10">
+        <Border Background="#FFB8AF9E" CornerRadius="10" Padding="0,0,10,10" Grid.RowSpan="2">
             <Viewbox>
-                <Canvas x:Name="gameStagePanel" Width="300" Height="300" HorizontalAlignment="Center" VerticalAlignment="Center"></Canvas>
+                <Canvas x:Name="gameStagePanel" Width="300" Height="300" HorizontalAlignment="Center" VerticalAlignment="Center"
+                        ButtonBase.Click="GameStagePanel_OnClick"
+                        />
             </Viewbox>
         </Border>
     </Grid>

@@ -39,7 +39,7 @@ namespace Game2048.Models
 
             List<IGridActionCommand> commands = new List<IGridActionCommand>();
             AddRandomItems(2, commands);
-            commands.ForEach(c => c.Do(this));
+            RunCommands(commands);
         }
 
         private void AddRandomItems(int initRandomEntityCount, List<IGridActionCommand> commands)
@@ -104,12 +104,18 @@ namespace Game2048.Models
             return gridEntities;
         }
 
-        public void Move(MoveDirection direction)
+        private void InitStepInfo()
         {
             _gridMoveInfoMap.Clear();
             _deletedGridItems.Clear();
             _newCreatedGridItems.Clear();
             
+        }
+
+        public void Move(MoveDirection direction)
+        {
+            InitStepInfo();
+
             List<IGridActionCommand> commands = new List<IGridActionCommand>();
 
             switch (direction)
@@ -131,10 +137,7 @@ namespace Game2048.Models
             if (commands.Count > 0)
             {
                 AddRandomItemsAfterMoved(commands);
-                foreach (var command in commands)
-                {
-                    command.Do(this);
-                }
+                RunCommands(commands);
             }
         }
 
@@ -355,6 +358,31 @@ namespace Game2048.Models
         public void AddNewCreatedGridItem(GridItem gridItem)
         {
             _newCreatedGridItems.Add(gridItem);
+        }
+
+        public void EnlargeGrid(int row, int col)
+        {
+            InitStepInfo();
+
+            var holder = GetGridHolder(row, col);
+            if (holder.IsNull)
+            {
+                return;
+            }
+
+            var item = holder.GridItem;
+            var largeItem = item.Merge(item);
+
+            List<IGridActionCommand> commands = new List<IGridActionCommand>();
+            commands.Add(CreateGridDeletionCommand(holder));
+            commands.Add(CreateNewCreatedCommand(holder, largeItem));
+
+            RunCommands(commands);
+        }
+
+        private void RunCommands(List<IGridActionCommand> commands)
+        {
+            commands.ForEach(c => c.Do(this));
         }
     }
 }

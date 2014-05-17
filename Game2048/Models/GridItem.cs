@@ -28,7 +28,7 @@ namespace Game2048.Models
         {
             return new GridItem(owner)
                 {
-                    Value = RANDOM.Next(1) == 1 ? 4 : 2
+                    Value = RANDOM.Next(2) == 0 ? 4 : 2
                 };
         }
 
