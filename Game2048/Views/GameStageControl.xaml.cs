@@ -151,8 +151,8 @@ namespace Game2048.Views
 
         private void ProcessDeleteGridItem(UIElement itemControl)
         {
-            var animation = new DoubleAnimation(1, 0, new Duration(TimeSpan.FromSeconds(0.05)));
-            animation.BeginTime = TimeSpan.FromSeconds(0.05);
+            var animation = new DoubleAnimation(1, 0, new Duration(TimeSpan.FromSeconds(0.01)));
+            animation.BeginTime = TimeSpan.FromSeconds(0.09);
 
             itemControl.BeginAnimation(UIElement.OpacityProperty, animation);
         }
@@ -160,8 +160,8 @@ namespace Game2048.Views
         private void ProcessNewCreatedGridItem(UIElement itemControl)
         {
             itemControl.SetValue(UIElement.OpacityProperty, 0);
-            var animation = new DoubleAnimation(0, 1, new Duration(TimeSpan.FromSeconds(0.05)));
-            animation.BeginTime = TimeSpan.FromSeconds(0.05);
+            var animation = new DoubleAnimation(0, 1, new Duration(TimeSpan.FromSeconds(0.01)));
+            animation.BeginTime = TimeSpan.FromSeconds(0.09);
 
             itemControl.BeginAnimation(UIElement.OpacityProperty, animation);
         }

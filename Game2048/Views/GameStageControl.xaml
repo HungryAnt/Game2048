@@ -13,11 +13,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="ContentControl">
                         <Border Padding="10,10,0,0">
-                            <Border Background="#FFECE0C8">
-                                <Viewbox Margin="5">
-                                    <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                </Viewbox>
-                            </Border>
+                            <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
@@ -25,7 +21,11 @@
             <Setter Property="ContentTemplate">
                 <Setter.Value>
                     <DataTemplate>
-                        <TextBlock Text="{Binding Path=Value}"/>
+                        <Border Background="#FFECE0C8">
+                            <Viewbox Margin="5">
+                                <TextBlock Text="{Binding}"/>
+                            </Viewbox>
+                        </Border>
                     </DataTemplate>
                 </Setter.Value>
             </Setter>
@@ -37,5 +37,24 @@
                 <Canvas x:Name="gameStagePanel" Width="300" Height="300" HorizontalAlignment="Center" VerticalAlignment="Center"></Canvas>
             </Viewbox>
         </Border>
+
+<!--        <Button>-->
+<!--            <Button.Template>-->
+<!--                <ControlTemplate TargetType="ContentControl">-->
+<!--                    <Border Padding="10,10,0,0">-->
+<!--                        <Border Background="#FFECE0C8">-->
+<!--                            <Viewbox Margin="5">-->
+<!--                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
+<!--                            </Viewbox>-->
+<!--                        </Border>-->
+<!--                    </Border>-->
+<!--                </ControlTemplate>-->
+<!--            </Button.Template>-->
+<!--            <Button.ContentTemplate>-->
+<!--                <DataTemplate>-->
+<!--                    <Border Background="Red" Width="100" Height="100"></Border>-->
+<!--                </DataTemplate>-->
+<!--            </Button.ContentTemplate>-->
+<!--        </Button>-->
     </Grid>
 </UserControl>
