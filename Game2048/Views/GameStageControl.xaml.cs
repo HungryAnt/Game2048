@@ -159,11 +159,27 @@ namespace Game2048.Views
 
         private void ProcessNewCreatedGridItem(UIElement itemControl)
         {
-            itemControl.SetValue(UIElement.OpacityProperty, 0);
-            var animation = new DoubleAnimation(0, 1, new Duration(TimeSpan.FromSeconds(0.01)));
-            animation.BeginTime = TimeSpan.FromSeconds(0.09);
+            itemControl.RenderTransformOrigin = new Point(0.5, 0.5);
 
-            itemControl.BeginAnimation(UIElement.OpacityProperty, animation);
+            var scaleTransform = new ScaleTransform(0, 0);
+            itemControl.RenderTransform = scaleTransform;
+
+            //itemControl.SetValue(UIElement.OpacityProperty, 0);
+            var opacityAnimation = new DoubleAnimation(0, 1, new Duration(TimeSpan.FromSeconds(0.1)));
+
+            itemControl.BeginAnimation(UIElement.OpacityProperty, opacityAnimation);
+
+            var animation = CreateRenderScaleAnimation();
+            scaleTransform.BeginAnimation(ScaleTransform.ScaleXProperty, animation);
+            scaleTransform.BeginAnimation(ScaleTransform.ScaleYProperty, animation);
+        }
+
+        private static DoubleAnimation CreateRenderScaleAnimation()
+        {
+            return new DoubleAnimation(0, 1, new Duration(TimeSpan.FromSeconds(0.2)))
+                {
+                    BeginTime = TimeSpan.FromSeconds(0)
+                };
         }
     }
 }

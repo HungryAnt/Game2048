@@ -7,7 +7,8 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              PreviewKeyDown="GameStage_OnPreviewKeyDown"
-             Focusable="True">
+             Focusable="True"
+             FocusVisualStyle="{x:Null}">
     <UserControl.Resources>
         <viewModels:GridBackColorConverter x:Key="gridBackColorConverter"/>
         <viewModels:GridForeColorConverter x:Key="gridForeColorConverter"/>

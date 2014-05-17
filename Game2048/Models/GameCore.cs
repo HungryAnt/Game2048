@@ -108,6 +108,7 @@ namespace Game2048.Models
         {
             _gridMoveInfoMap.Clear();
             _deletedGridItems.Clear();
+            _newCreatedGridItems.Clear();
             
             List<IGridActionCommand> commands = new List<IGridActionCommand>();
 

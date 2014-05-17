@@ -15,6 +15,8 @@ namespace Game2048.Models
         {
             var gridHolder = gameCore.GetGridHolder(Row, Col);
             gridHolder.SetGridEntity(NewGridItem);
+
+            gameCore.AddNewCreatedGridItem(NewGridItem);
         }
 
         public void Undo(GameCore gameCore)
