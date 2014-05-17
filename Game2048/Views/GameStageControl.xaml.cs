@@ -52,7 +52,7 @@ namespace Game2048.Views
             {
                 foreach (var gridViewModel in GameStageViewModel.GridViewModels)
                 {
-                    var itemControl = CreateGridItem(itemWidth, itemHeight, gridViewModel.Value);
+                    var itemControl = CreateGridItem(itemWidth, itemHeight, gridViewModel);
 
                     if ((gridViewModel.GridStates & GridStates.Moved) == GridStates.Moved)
                     {
@@ -81,14 +81,14 @@ namespace Game2048.Views
             }
         }
 
-        private UIElement CreateGridItem(double width, double height, object value)
+        private UIElement CreateGridItem(double width, double height, GridViewModel gridViewModel)
         {
             Button button = new Button()
                 {
                     Width = width,
                     Height = height,
                     Style = _gridItemStyle,
-                    Content = value,
+                    Content = gridViewModel,
                     Focusable = false
                 };
             return button;

@@ -16,6 +16,12 @@ namespace Game2048.Models
 
         public int Value { get; private set; }
 
+        // 等级
+        public int Level
+        {
+            get { return (int)Math.Round(Math.Log(Value, 2)); }
+        }
+
         private static readonly Random RANDOM = new Random();
 
         internal static GridItem GetRandomEntity(GridHolder owner)

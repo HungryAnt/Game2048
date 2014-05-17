@@ -65,6 +65,8 @@
     <Compile Include="Models\MoveDirection.cs" />
     <Compile Include="NotificationObject.cs" />
     <Compile Include="ViewModels\GameStageViewModel.cs" />
+    <Compile Include="ViewModels\GridBackColorConverter.cs" />
+    <Compile Include="ViewModels\GridForeColorConverter.cs" />
     <Compile Include="ViewModels\GridState.cs" />
     <Compile Include="ViewModels\GridViewModel.cs" />
     <Compile Include="Views\GameGridPanel.cs" />

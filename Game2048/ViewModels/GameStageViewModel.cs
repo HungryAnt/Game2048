@@ -10,18 +10,6 @@ namespace Game2048.ViewModels
     {
         public List<GridViewModel> GridViewModels { get; private set; } 
 
-        public GameStageViewModel()
-        {
-        }
-
-        void Init()
-        {
-            GridViewModel gridViewModel = new GridViewModel()
-                {
-                    Value = "2048"
-                };
-        }
-
         public int GridRowCount
         {
             get { return GameCore.ROW_COUNT; }
@@ -44,6 +32,7 @@ namespace Game2048.ViewModels
                 var gridViewModel = new GridViewModel()
                     {
                         Value = gridItem.Value,
+                        Level = gridItem.Level,
                         ToRow = gridItem.Owner.Row,
                         ToCol = gridItem.Owner.Col,
                     };

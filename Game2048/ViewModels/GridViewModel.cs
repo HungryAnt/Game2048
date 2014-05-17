@@ -11,6 +11,8 @@ namespace Game2048.ViewModels
     {
         public object Value { get; set; }
 
+        public int Level { get; set; }
+
         public int FromRow { get; set; }
 
         public int FromCol { get; set; }
