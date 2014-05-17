@@ -8,9 +8,11 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Game2048.Models;
 using Game2048.ViewModels;
 
 namespace Game2048.Views
@@ -51,10 +53,40 @@ namespace Game2048.Views
                 foreach (var gridViewModel in GameStageViewModel.GridViewModels)
                 {
                     var itemControl = CreateGridItem(itemWidth, itemHeight, gridViewModel.Value);
-                    double locX = gridViewModel.ToCol*itemWidth;
-                    double locY = gridViewModel.ToRow*itemHeight;
-                    Canvas.SetLeft(itemControl, locX);
-                    Canvas.SetTop(itemControl, locY);
+
+                    if ((gridViewModel.GridStates & GridStates.Moved) == GridStates.Moved)
+                    {
+                        GridMoveInfo moveInfo = gridViewModel.MoveInfo;
+                        if (moveInfo.FromCol != moveInfo.ToCol)
+                        {
+                            itemControl.BeginAnimation(
+                                Canvas.LeftProperty,
+                                CreateMoveAnimation(moveInfo.FromCol*itemWidth, moveInfo.ToCol*itemWidth));
+                        }
+                        else
+                        {
+                            Canvas.SetLeft(itemControl, moveInfo.ToCol * itemWidth);
+                        }
+
+                        if (moveInfo.FromRow != moveInfo.ToRow)
+                        {
+                            itemControl.BeginAnimation(
+                                Canvas.TopProperty,
+                                CreateMoveAnimation(moveInfo.FromRow * itemHeight, moveInfo.ToRow * itemHeight));
+                        }
+                        else
+                        {
+                            Canvas.SetTop(itemControl, moveInfo.ToRow * itemHeight);
+                        }
+                    }
+                    else
+                    {
+                        double locX = gridViewModel.ToCol * itemWidth;
+                        double locY = gridViewModel.ToRow * itemHeight;
+                        Canvas.SetLeft(itemControl, locX);
+                        Canvas.SetTop(itemControl, locY);
+                    }
+
                     gameStagePanel.Children.Add(itemControl);
                 }
             }
@@ -95,6 +127,11 @@ namespace Game2048.Views
 
             UpdateGridItems();
             e.Handled = true;
+        }
+
+        private static DoubleAnimation CreateMoveAnimation(double from, double to)
+        {
+            return new DoubleAnimation(from, to, new Duration(TimeSpan.FromSeconds(0.1)));
         }
     }
 }

@@ -34,7 +34,8 @@ namespace Game2048.ViewModels
 
         public void GenerateGirdViewModels()
         {
-            var gridEntities = GameManager.Instance.GameCore.GetAllGridEntities();
+            var gameCore = GameManager.Instance.GameCore;
+            var gridEntities = gameCore.GetAllGridEntities();
 
             List<GridViewModel> gridViewModels = new List<GridViewModel>();
 
@@ -46,6 +47,14 @@ namespace Game2048.ViewModels
                         ToRow = gridEntity.Owner.Row,
                         ToCol = gridEntity.Owner.Col,
                     };
+
+                GridMoveInfo moveInfo;
+                if (gameCore.TryGetMoveInfo(gridEntity, out moveInfo))
+                {
+                    gridViewModel.GridStates |= GridStates.Moved;
+                    gridViewModel.MoveInfo = moveInfo;
+                }
+
                 gridViewModels.Add(gridViewModel);
             }
 

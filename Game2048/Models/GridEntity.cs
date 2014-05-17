@@ -57,5 +57,11 @@ namespace Game2048.Models
         /// 是否进行了移动
         /// </summary>
         public bool IsMoved { get; set; }
+
+        public int FromRow
+        {
+            get { throw new NotImplementedException(); }
+            set { throw new NotImplementedException(); }
+        }
     }
 }

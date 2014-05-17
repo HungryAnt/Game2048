@@ -7,9 +7,9 @@ namespace Game2048.Models
 {
     public class GridMoveInfo
     {
-        public int FromX { get; set; }
-        public int FromY { get; set; }
-        public int ToX { get; set; }
-        public int ToY { get; set; }
+        public int FromRow { get; set; }
+        public int FromCol { get; set; }
+        public int ToRow { get; set; }
+        public int ToCol { get; set; }
     }
 }

@@ -5,21 +5,24 @@ using System.Text;
 
 namespace Game2048.ViewModels
 {
-    public enum GridState
+    [Flags]
+    public enum GridStates
     {
+        Null = 0,
+
         /// <summary>
         /// 新增的
         /// </summary>
-        NewCreated,
+        NewCreated = 1,
 
         /// <summary>
         /// 原有的
         /// </summary>
-        Original,
+        Original = 2,
 
         /// <summary>
         /// 有移动的
         /// </summary>
-        Moved,
+        Moved = 4,
     }
 }

@@ -57,6 +57,7 @@
     </ApplicationDefinition>
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="Models\Commands\GridDeletionCommand.cs" />
+    <Compile Include="Models\Commands\GridMoveInfo.cs" />
     <Compile Include="Models\Commands\GridNewCreatedCommand.cs" />
     <Compile Include="Models\Commands\IGridActionCommand.cs" />
     <Compile Include="Models\Commands\GridMoveCommand.cs" />
@@ -97,7 +98,6 @@
   <ItemGroup>
     <Compile Include="Models\GameCore.cs" />
     <Compile Include="Models\GridHolder.cs" />
-    <Compile Include="Models\GridMoveInfo.cs" />
     <Compile Include="Models\GridEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

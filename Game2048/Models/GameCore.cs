@@ -14,6 +14,10 @@ namespace Game2048.Models
 
         private GridHolder[][] _gridData;
 
+        //private List<KeyValuePair<GridEntity, GridMoveInfo>> _gridMoveInfos = new List<KeyValuePair<GridEntity, GridMoveInfo>>();
+
+        private readonly Dictionary<GridEntity, GridMoveInfo> _gridMoveInfoMap = new Dictionary<GridEntity, GridMoveInfo>(); 
+
         public GameCore()
         {
             InitGrid();
@@ -99,6 +103,8 @@ namespace Game2048.Models
 
         public void Move(MoveDirection direction)
         {
+            _gridMoveInfoMap.Clear();
+            
             List<IGridActionCommand> commands = new List<IGridActionCommand>();
 
             switch (direction)
@@ -257,12 +263,15 @@ namespace Game2048.Models
 
         private static GridMoveCommand CreateMoveCommand(GridHolder fromHolder, GridHolder toHolder)
         {
-            return new GridMoveCommand()
+            return new GridMoveCommand
                 {
-                    FromRow = fromHolder.Row,
-                    FromCol = fromHolder.Col,
-                    ToRow = toHolder.Row,
-                    ToCol = toHolder.Col
+                    MoveInfo = new GridMoveInfo()
+                        {
+                            FromRow = fromHolder.Row,
+                            FromCol = fromHolder.Col,
+                            ToRow = toHolder.Row,
+                            ToCol = toHolder.Col
+                        }
                 };
         }
 
@@ -283,6 +292,16 @@ namespace Game2048.Models
                     Row = holder.Row,
                     Col = holder.Col
                 };
+        }
+
+        public void AddMoveInfo(GridEntity gridEntity, GridMoveInfo moveInfo)
+        {
+            _gridMoveInfoMap.Add(gridEntity, moveInfo);
+        }
+
+        public bool TryGetMoveInfo(GridEntity gridEntity, out GridMoveInfo moveInfo)
+        {
+            return _gridMoveInfoMap.TryGetValue(gridEntity, out moveInfo);
         }
     }
 }

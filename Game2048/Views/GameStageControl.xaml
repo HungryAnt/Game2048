@@ -33,7 +33,9 @@
     </UserControl.Resources>
     <Grid>
         <Border Background="#FFB8AF9E" CornerRadius="10" Padding="0,0,10,10">
-            <Canvas x:Name="gameStagePanel" Width="300" Height="300" HorizontalAlignment="Center" VerticalAlignment="Center"></Canvas>
+            <Viewbox>
+                <Canvas x:Name="gameStagePanel" Width="300" Height="300" HorizontalAlignment="Center" VerticalAlignment="Center"></Canvas>
+            </Viewbox>
         </Border>
     </Grid>
 </UserControl>

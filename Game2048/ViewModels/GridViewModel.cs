@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Game2048.Models;
 using Gods.Foundation;
 
 namespace Game2048.ViewModels
@@ -18,7 +19,9 @@ namespace Game2048.ViewModels
 
         public int ToCol { get; set; }
 
-        public GridState GridState { get; set; }
+        public GridStates GridStates { get; set; }
+
+        public GridMoveInfo MoveInfo { get; set; }
 
 //        private object _value;
 //
