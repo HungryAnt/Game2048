@@ -5,63 +5,42 @@ using System.Text;
 
 namespace Game2048.Models
 {
-    public class GridEntity
+    public class GridItem
     {
         internal GridHolder Owner { get; set; }
 
-        private GridEntity(GridHolder owner)
+        private GridItem(GridHolder owner)
         {
             Owner = owner;
         }
 
         public int Value { get; private set; }
 
-        /// <summary>
-        /// 是否进行了合并
-        /// </summary>
-        public bool IsMerged { get; set; }
-
         private static readonly Random RANDOM = new Random();
 
-        internal static GridEntity GetRandomEntity(GridHolder owner)
+        internal static GridItem GetRandomEntity(GridHolder owner)
         {
-            return new GridEntity(owner)
+            return new GridItem(owner)
                 {
                     Value = RANDOM.Next(1) == 1 ? 4 : 2
                 };
         }
 
-        public bool CanMerge(GridEntity other)
+        public bool CanMerge(GridItem other)
         {
             return Value == other.Value;
         }
 
-        public GridEntity Merge(GridEntity other)
+        public GridItem Merge(GridItem other)
         {
             if (Value != other.Value)
             {
-                throw new Exception("GridEntity Merge Error");
+                throw new Exception("GridItem Merge Error");
             }
-            return new GridEntity(null)
+            return new GridItem(null)
                 {
                     Value = Value*2
                 };
-        }
-
-        /// <summary>
-        /// 被合并的
-        /// </summary>
-        public bool IsBeMerged { get; set; }
-
-        /// <summary>
-        /// 是否进行了移动
-        /// </summary>
-        public bool IsMoved { get; set; }
-
-        public int FromRow
-        {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
         }
     }
 }

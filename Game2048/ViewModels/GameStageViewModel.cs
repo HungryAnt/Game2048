@@ -35,24 +35,34 @@ namespace Game2048.ViewModels
         public void GenerateGirdViewModels()
         {
             var gameCore = GameManager.Instance.GameCore;
-            var gridEntities = gameCore.GetAllGridEntities();
+            var gridItems = gameCore.GetAllGridItems();
 
             List<GridViewModel> gridViewModels = new List<GridViewModel>();
 
-            foreach (var gridEntity in gridEntities)
+            foreach (var gridItem in gridItems)
             {
                 var gridViewModel = new GridViewModel()
                     {
-                        Value = gridEntity.Value,
-                        ToRow = gridEntity.Owner.Row,
-                        ToCol = gridEntity.Owner.Col,
+                        Value = gridItem.Value,
+                        ToRow = gridItem.Owner.Row,
+                        ToCol = gridItem.Owner.Col,
                     };
 
                 GridMoveInfo moveInfo;
-                if (gameCore.TryGetMoveInfo(gridEntity, out moveInfo))
+                if (gameCore.TryGetMoveInfo(gridItem, out moveInfo))
                 {
                     gridViewModel.GridStates |= GridStates.Moved;
                     gridViewModel.MoveInfo = moveInfo;
+                }
+
+                if (gameCore.IsDeletedGridItem(gridItem))
+                {
+                    gridViewModel.GridStates |= GridStates.Deleted;
+                }
+
+                if (gameCore.IsNewCreatedItem(gridItem))
+                {
+                    gridViewModel.GridStates |= GridStates.NewCreated;
                 }
 
                 gridViewModels.Add(gridViewModel);

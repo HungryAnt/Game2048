@@ -24,5 +24,7 @@ namespace Game2048.ViewModels
         /// 有移动的
         /// </summary>
         Moved = 4,
+
+        Deleted = 8
     }
 }

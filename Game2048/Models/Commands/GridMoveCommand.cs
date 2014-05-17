@@ -14,7 +14,7 @@ namespace Game2048.Models
             var fromHolder = gameCore.GetGridHolder(MoveInfo.FromRow, MoveInfo.FromCol);
             var toHolder = gameCore.GetGridHolder(MoveInfo.ToRow, MoveInfo.ToCol);
 
-            var gridEntity = fromHolder.GridEntity;
+            var gridEntity = fromHolder.GridItem;
             fromHolder.SetGridEntity(null);
 
             toHolder.SetGridEntity(gridEntity);
@@ -27,7 +27,7 @@ namespace Game2048.Models
             var fromHolder = gameCore.GetGridHolder(MoveInfo.FromRow, MoveInfo.FromCol);
             var toHolder = gameCore.GetGridHolder(MoveInfo.ToRow, MoveInfo.ToCol);
 
-            var gridEntity = toHolder.GridEntity;
+            var gridEntity = toHolder.GridItem;
             toHolder.SetGridEntity(null);
 
             fromHolder.SetGridEntity(gridEntity);

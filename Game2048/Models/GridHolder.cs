@@ -14,7 +14,7 @@ namespace Game2048.Models
         /// <summary>
         /// 可以承载一个GridEntity
         /// </summary>
-        public GridEntity GridEntity { get; private set; }
+        public GridItem GridItem { get; private set; }
 
         public GridHolder(int row, int col)
         {
@@ -27,24 +27,24 @@ namespace Game2048.Models
         /// </summary>
         public bool IsNull
         {
-            get { return GridEntity == null; }
+            get { return GridItem == null; }
         }
 
-        public void SetGridEntity(GridEntity gridEntity)
+        public void SetGridEntity(GridItem gridItem)
         {
-            GridEntity = gridEntity;
+            GridItem = gridItem;
 
-            if (gridEntity != null)
+            if (gridItem != null)
             {
-                gridEntity.Owner = this;
+                gridItem.Owner = this;
             }
         }
 
         public bool IsTempNull
         {
-            get { return TempEntity == null; }
+            get { return TempItem == null; }
         }
 
-        public GridEntity TempEntity { get; set; }
+        public GridItem TempItem { get; set; }
     }
 }

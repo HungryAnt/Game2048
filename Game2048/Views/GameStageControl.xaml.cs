@@ -56,28 +56,7 @@ namespace Game2048.Views
 
                     if ((gridViewModel.GridStates & GridStates.Moved) == GridStates.Moved)
                     {
-                        GridMoveInfo moveInfo = gridViewModel.MoveInfo;
-                        if (moveInfo.FromCol != moveInfo.ToCol)
-                        {
-                            itemControl.BeginAnimation(
-                                Canvas.LeftProperty,
-                                CreateMoveAnimation(moveInfo.FromCol*itemWidth, moveInfo.ToCol*itemWidth));
-                        }
-                        else
-                        {
-                            Canvas.SetLeft(itemControl, moveInfo.ToCol * itemWidth);
-                        }
-
-                        if (moveInfo.FromRow != moveInfo.ToRow)
-                        {
-                            itemControl.BeginAnimation(
-                                Canvas.TopProperty,
-                                CreateMoveAnimation(moveInfo.FromRow * itemHeight, moveInfo.ToRow * itemHeight));
-                        }
-                        else
-                        {
-                            Canvas.SetTop(itemControl, moveInfo.ToRow * itemHeight);
-                        }
+                        ProcessMoveGridItem(itemControl, gridViewModel, itemWidth, itemHeight);
                     }
                     else
                     {
@@ -85,6 +64,16 @@ namespace Game2048.Views
                         double locY = gridViewModel.ToRow * itemHeight;
                         Canvas.SetLeft(itemControl, locX);
                         Canvas.SetTop(itemControl, locY);
+                    }
+
+                    if ((gridViewModel.GridStates & GridStates.Deleted) == GridStates.Deleted)
+                    {
+                        ProcessDeleteGridItem(itemControl);
+                    }
+
+                    if ((gridViewModel.GridStates & GridStates.NewCreated) == GridStates.NewCreated)
+                    {
+                        ProcessNewCreatedGridItem(itemControl);
                     }
 
                     gameStagePanel.Children.Add(itemControl);
@@ -132,6 +121,49 @@ namespace Game2048.Views
         private static DoubleAnimation CreateMoveAnimation(double from, double to)
         {
             return new DoubleAnimation(from, to, new Duration(TimeSpan.FromSeconds(0.1)));
+        }
+
+        private void ProcessMoveGridItem(UIElement itemControl, GridViewModel gridViewModel, double itemWidth, double itemHeight)
+        {
+            GridMoveInfo moveInfo = gridViewModel.MoveInfo;
+            if (moveInfo.FromCol != moveInfo.ToCol)
+            {
+                itemControl.BeginAnimation(
+                    Canvas.LeftProperty,
+                    CreateMoveAnimation(moveInfo.FromCol * itemWidth, moveInfo.ToCol * itemWidth));
+            }
+            else
+            {
+                Canvas.SetLeft(itemControl, moveInfo.ToCol * itemWidth);
+            }
+
+            if (moveInfo.FromRow != moveInfo.ToRow)
+            {
+                itemControl.BeginAnimation(
+                    Canvas.TopProperty,
+                    CreateMoveAnimation(moveInfo.FromRow * itemHeight, moveInfo.ToRow * itemHeight));
+            }
+            else
+            {
+                Canvas.SetTop(itemControl, moveInfo.ToRow * itemHeight);
+            }
+        }
+
+        private void ProcessDeleteGridItem(UIElement itemControl)
+        {
+            var animation = new DoubleAnimation(1, 0, new Duration(TimeSpan.FromSeconds(0.05)));
+            animation.BeginTime = TimeSpan.FromSeconds(0.05);
+
+            itemControl.BeginAnimation(UIElement.OpacityProperty, animation);
+        }
+
+        private void ProcessNewCreatedGridItem(UIElement itemControl)
+        {
+            itemControl.SetValue(UIElement.OpacityProperty, 0);
+            var animation = new DoubleAnimation(0, 1, new Duration(TimeSpan.FromSeconds(0.05)));
+            animation.BeginTime = TimeSpan.FromSeconds(0.05);
+
+            itemControl.BeginAnimation(UIElement.OpacityProperty, animation);
         }
     }
 }

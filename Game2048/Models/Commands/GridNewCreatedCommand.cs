@@ -7,14 +7,14 @@ namespace Game2048.Models
 {
     class GridNewCreatedCommand : IGridActionCommand
     {
-        public GridEntity NewGridEntity { get; set; }
+        public GridItem NewGridItem { get; set; }
         public int Row { get; set; }
         public int Col { get; set; }
 
         public void Do(GameCore gameCore)
         {
             var gridHolder = gameCore.GetGridHolder(Row, Col);
-            gridHolder.SetGridEntity(NewGridEntity);
+            gridHolder.SetGridEntity(NewGridItem);
         }
 
         public void Undo(GameCore gameCore)

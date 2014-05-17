@@ -10,19 +10,20 @@ namespace Game2048.Models
         public int Row { get; set; }
         public int Col { get; set; }
 
-        private GridEntity DeletedGridEntity { get; set; }
+        private GridItem DeletedGridItem { get; set; }
 
         public void Do(GameCore gameCore)
         {
             var gridHolder = gameCore.GetGridHolder(Row, Col);
-            DeletedGridEntity = gridHolder.GridEntity;
+            DeletedGridItem = gridHolder.GridItem;
             gridHolder.SetGridEntity(null);
+            gameCore.AddDeletedGridItem(DeletedGridItem);
         }
 
         public void Undo(GameCore gameCore)
         {
             var gridHolder = gameCore.GetGridHolder(Row, Col);
-            gridHolder.SetGridEntity(DeletedGridEntity);
+            gridHolder.SetGridEntity(DeletedGridItem);
         }
     }
 }

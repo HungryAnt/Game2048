@@ -14,9 +14,11 @@ namespace Game2048.Models
 
         private GridHolder[][] _gridData;
 
-        //private List<KeyValuePair<GridEntity, GridMoveInfo>> _gridMoveInfos = new List<KeyValuePair<GridEntity, GridMoveInfo>>();
+        //private List<KeyValuePair<GridItem, GridMoveInfo>> _gridMoveInfos = new List<KeyValuePair<GridItem, GridMoveInfo>>();
 
-        private readonly Dictionary<GridEntity, GridMoveInfo> _gridMoveInfoMap = new Dictionary<GridEntity, GridMoveInfo>(); 
+        private readonly Dictionary<GridItem, GridMoveInfo> _gridMoveInfoMap = new Dictionary<GridItem, GridMoveInfo>();
+        private readonly HashSet<GridItem> _deletedGridItems = new HashSet<GridItem>(); 
+        private readonly HashSet<GridItem> _newCreatedGridItems = new HashSet<GridItem>(); 
 
         public GameCore()
         {
@@ -66,8 +68,8 @@ namespace Game2048.Models
 
                     if (gridHolder.IsTempNull)
                     {
-                        commands.Add(CreateNewCreatedCommand(gridHolder, GridEntity.GetRandomEntity(gridHolder)));
-                        //gridHolder.SetGridEntity(GridEntity.GetRandomEntity(gridHolder));
+                        commands.Add(CreateNewCreatedCommand(gridHolder, GridItem.GetRandomEntity(gridHolder)));
+                        //gridHolder.SetGridEntity(GridItem.GetRandomEntity(gridHolder));
                         --initRandomEntityCount;
                     }
                 }
@@ -84,9 +86,9 @@ namespace Game2048.Models
             return _gridData[row][col];
         }
 
-        public List<GridEntity> GetAllGridEntities()
+        public List<GridItem> GetAllGridItems()
         {
-            var gridEntities = new List<GridEntity>();
+            var gridEntities = new List<GridItem>();
             for (int row = 0; row < ROW_COUNT; row++)
             {
                 for (int col = 0; col < COL_COUNT; col++)
@@ -94,16 +96,18 @@ namespace Game2048.Models
                     GridHolder gridHolder = GetGridHolder(row, col);
                     if (!gridHolder.IsNull)
                     {
-                        gridEntities.Add(gridHolder.GridEntity);
+                        gridEntities.Add(gridHolder.GridItem);
                     }
                 }
             }
+            gridEntities.AddRange(_deletedGridItems);
             return gridEntities;
         }
 
         public void Move(MoveDirection direction)
         {
             _gridMoveInfoMap.Clear();
+            _deletedGridItems.Clear();
             
             List<IGridActionCommand> commands = new List<IGridActionCommand>();
 
@@ -199,7 +203,7 @@ namespace Game2048.Models
         {
             foreach (var gridHolder in gridHolders)
             {
-                gridHolder.TempEntity = gridHolder.GridEntity;
+                gridHolder.TempItem = gridHolder.GridItem;
             }
 
             int top = 0;
@@ -215,19 +219,19 @@ namespace Game2048.Models
                     continue;
                 }
 
-                var currentGridEntity = currentGridHolder.TempEntity;
+                var currentGridEntity = currentGridHolder.TempItem;
 
                 if (topGridHolder.IsTempNull)
                 {
                     commands.Add(CreateMoveCommand(currentGridHolder, topGridHolder));
 
-                    gridHolders[current].TempEntity = null;
-                    gridHolders[top].TempEntity = currentGridEntity;
+                    gridHolders[current].TempItem = null;
+                    gridHolders[top].TempItem = currentGridEntity;
                     ++current;
                     continue;
                 }
 
-                var topGridEntity = topGridHolder.TempEntity;
+                var topGridEntity = topGridHolder.TempItem;
 
                 if (currentGridEntity.CanMerge(topGridEntity))
                 {
@@ -240,13 +244,13 @@ namespace Game2048.Models
                     // 删除移动后的方格
                     commands.Add(CreateGridDeletionCommand(topGridHolder));
 
-                    GridEntity newGridEntity = currentGridEntity.Merge(topGridEntity);
+                    GridItem newGridItem = currentGridEntity.Merge(topGridEntity);
 
                     // 创建新的合并后的方块
-                    commands.Add(CreateNewCreatedCommand(topGridHolder, newGridEntity));
+                    commands.Add(CreateNewCreatedCommand(topGridHolder, newGridItem));
 
-                    gridHolders[current].TempEntity = null;
-                    gridHolders[top].TempEntity = newGridEntity;
+                    gridHolders[current].TempItem = null;
+                    gridHolders[top].TempItem = newGridItem;
                     ++top;
                     ++current;
                 }
@@ -275,13 +279,13 @@ namespace Game2048.Models
                 };
         }
 
-        private static GridNewCreatedCommand CreateNewCreatedCommand(GridHolder holder, GridEntity newGridEntity)
+        private static GridNewCreatedCommand CreateNewCreatedCommand(GridHolder holder, GridItem newGridItem)
         {
             return new GridNewCreatedCommand()
                 {
                     Row = holder.Row,
                     Col = holder.Col,
-                    NewGridEntity = newGridEntity
+                    NewGridItem = newGridItem
                 };
         }
 
@@ -294,14 +298,62 @@ namespace Game2048.Models
                 };
         }
 
-        public void AddMoveInfo(GridEntity gridEntity, GridMoveInfo moveInfo)
+        /// <summary>
+        /// 添加方格位置移动信息
+        /// </summary>
+        /// <param name="gridItem"></param>
+        /// <param name="moveInfo"></param>
+        public void AddMoveInfo(GridItem gridItem, GridMoveInfo moveInfo)
         {
-            _gridMoveInfoMap.Add(gridEntity, moveInfo);
+            _gridMoveInfoMap.Add(gridItem, moveInfo);
         }
 
-        public bool TryGetMoveInfo(GridEntity gridEntity, out GridMoveInfo moveInfo)
+        /// <summary>
+        /// 获取方格位置移动信息
+        /// </summary>
+        /// <param name="gridItem"></param>
+        /// <param name="moveInfo"></param>
+        /// <returns></returns>
+        public bool TryGetMoveInfo(GridItem gridItem, out GridMoveInfo moveInfo)
         {
-            return _gridMoveInfoMap.TryGetValue(gridEntity, out moveInfo);
+            return _gridMoveInfoMap.TryGetValue(gridItem, out moveInfo);
+        }
+
+        /// <summary>
+        /// 是否是被删除的方格
+        /// </summary>
+        /// <returns></returns>
+        public bool IsDeletedGridItem(GridItem gridItem)
+        {
+            return _deletedGridItems.Contains(gridItem);
+        }
+
+        /// <summary>
+        /// 添加被删除的方格
+        /// </summary>
+        /// <param name="gridItem"></param>
+        public void AddDeletedGridItem(GridItem gridItem)
+        {
+            _deletedGridItems.Add(gridItem);
+        }
+
+        /// <summary>
+        /// 是否是新创建的方格
+        /// </summary>
+        /// <param name="gridItem"></param>
+        /// <returns></returns>
+        public bool IsNewCreatedItem(GridItem gridItem)
+        {
+            return _newCreatedGridItems.Contains(gridItem);
+        }
+
+        /// <summary>
+        /// 添加新创建的方格
+        /// </summary>
+        /// <param name="gridItem"></param>
+        public void AddNewCreatedGridItem(GridItem gridItem)
+        {
+            _newCreatedGridItems.Add(gridItem);
         }
     }
 }
