@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Game2048.Models
 {
-    internal class GridHolder
+    public class GridHolder
     {
         // 在游戏方格中的位置
         public int Row { get; set; }
@@ -39,5 +39,12 @@ namespace Game2048.Models
                 gridEntity.Owner = this;
             }
         }
+
+        public bool IsTempNull
+        {
+            get { return TempEntity == null; }
+        }
+
+        public GridEntity TempEntity { get; set; }
     }
 }

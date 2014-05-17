@@ -54,25 +54,25 @@ namespace Game2048.ViewModels
 
         public void MoveUp()
         {
-            GameManager.Instance.GameCore.MoveUp();
+            GameManager.Instance.GameCore.Move(MoveDirection.Up);
             GenerateGirdViewModels();
         }
 
         public void MoveDown()
         {
-            GameManager.Instance.GameCore.MoveDown();
+            GameManager.Instance.GameCore.Move(MoveDirection.Down);
             GenerateGirdViewModels();
         }
 
         public void MoveLeft()
         {
-            GameManager.Instance.GameCore.MoveLeft();
+            GameManager.Instance.GameCore.Move(MoveDirection.Left);
             GenerateGirdViewModels();
         }
 
         public void MoveRight()
         {
-            GameManager.Instance.GameCore.MoveRight();
+            GameManager.Instance.GameCore.Move(MoveDirection.Right);
             GenerateGirdViewModels();
         }
     }

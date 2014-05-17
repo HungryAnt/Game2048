@@ -31,10 +31,12 @@ namespace Game2048.Models
                 }
             }
 
-            AddRandomItems(2);
+            List<IGridActionCommand> commands = new List<IGridActionCommand>();
+            AddRandomItems(2, commands);
+            commands.ForEach(c => c.Do(this));
         }
 
-        private void AddRandomItems(int initRandomEntityCount)
+        private void AddRandomItems(int initRandomEntityCount, List<IGridActionCommand> commands)
         {
             List<GridHolder> emptyHolders = new List<GridHolder>();
 
@@ -43,7 +45,7 @@ namespace Game2048.Models
                 for (int col = 0; col < COL_COUNT; ++col)
                 {
                     var holder = GetGridHolder(row, col);
-                    if (holder.IsNull)
+                    if (holder.IsTempNull)
                     {
                         emptyHolders.Add(holder);
                     }
@@ -58,21 +60,22 @@ namespace Game2048.Models
 
                     var gridHolder = emptyHolders[randIndex];
 
-                    if (gridHolder.IsNull)
+                    if (gridHolder.IsTempNull)
                     {
-                        gridHolder.SetGridEntity(GridEntity.GetRandomEntity(gridHolder));
+                        commands.Add(CreateNewCreatedCommand(gridHolder, GridEntity.GetRandomEntity(gridHolder)));
+                        //gridHolder.SetGridEntity(GridEntity.GetRandomEntity(gridHolder));
                         --initRandomEntityCount;
                     }
                 }
             }
         }
 
-        private void AddRandomItemsAfterMoved()
+        private void AddRandomItemsAfterMoved(List<IGridActionCommand> commands)
         {
-            AddRandomItems(1);
+            AddRandomItems(1, commands);
         }
 
-        private GridHolder GetGridHolder(int row, int col)
+        public GridHolder GetGridHolder(int row, int col)
         {
             return _gridData[row][col];
         }
@@ -94,9 +97,39 @@ namespace Game2048.Models
             return gridEntities;
         }
 
-        public void MoveUp()
+        public void Move(MoveDirection direction)
         {
-            GridHolder[] gridHolders = new GridHolder[ROW_COUNT];
+            List<IGridActionCommand> commands = new List<IGridActionCommand>();
+
+            switch (direction)
+            {
+                case MoveDirection.Up:
+                    MoveUp(commands);
+                    break;
+                case MoveDirection.Down:
+                    MoveDown(commands);
+                    break;
+                case MoveDirection.Left:
+                    MoveLeft(commands);
+                    break;
+                case MoveDirection.Right:
+                    MoveRight(commands);
+                    break;
+            }
+
+            if (commands.Count > 0)
+            {
+                AddRandomItemsAfterMoved(commands);
+                foreach (var command in commands)
+                {
+                    command.Do(this);
+                }
+            }
+        }
+
+        public void MoveUp(List<IGridActionCommand> commands)
+        {
+            var gridHolders = new GridHolder[ROW_COUNT];
 
             for (int col = 0; col < COL_COUNT; ++col)
             {
@@ -107,15 +140,13 @@ namespace Game2048.Models
                     gridHolders[index++] = GetGridHolder(row, col);
                 }
 
-                MoveGrid(gridHolders);
+                MoveGrid(gridHolders, commands);
             }
-
-            AddRandomItemsAfterMoved();
         }
 
-        public void MoveDown()
+        public void MoveDown(List<IGridActionCommand> commands)
         {
-            GridHolder[] gridHolders = new GridHolder[ROW_COUNT];
+            var gridHolders = new GridHolder[ROW_COUNT];
 
             for (int col = 0; col < COL_COUNT; ++col)
             {
@@ -124,15 +155,13 @@ namespace Game2048.Models
                 {
                     gridHolders[index++] = GetGridHolder(row, col);
                 }
-                MoveGrid(gridHolders);
+                MoveGrid(gridHolders, commands);
             }
-
-            AddRandomItemsAfterMoved();
         }
 
-        public void MoveLeft()
+        public void MoveLeft(List<IGridActionCommand> commands)
         {
-            GridHolder[] gridHolders = new GridHolder[ROW_COUNT];
+            var gridHolders = new GridHolder[COL_COUNT];
 
             for (int row = 0; row < ROW_COUNT; ++row)
             {
@@ -141,15 +170,13 @@ namespace Game2048.Models
                 {
                     gridHolders[index++] = GetGridHolder(row, col);
                 }
-                MoveGrid(gridHolders);
+                MoveGrid(gridHolders, commands);
             }
-
-            AddRandomItemsAfterMoved();
         }
 
-        public void MoveRight()
+        public void MoveRight(List<IGridActionCommand> commands)
         {
-            GridHolder[] gridHolders = new GridHolder[ROW_COUNT];
+            var gridHolders = new GridHolder[COL_COUNT];
 
             for (int row = 0; row < ROW_COUNT; ++row)
             {
@@ -158,14 +185,17 @@ namespace Game2048.Models
                 {
                     gridHolders[index++] = GetGridHolder(row, col);
                 }
-                MoveGrid(gridHolders);
+                MoveGrid(gridHolders, commands);
             }
-
-            AddRandomItemsAfterMoved();
         }
 
-        private void MoveGrid(GridHolder[] gridHolders)
+        private void MoveGrid(GridHolder[] gridHolders, List<IGridActionCommand> commands)
         {
+            foreach (var gridHolder in gridHolders)
+            {
+                gridHolder.TempEntity = gridHolder.GridEntity;
+            }
+
             int top = 0;
 
             for (int current = 1; current < gridHolders.Length;)
@@ -173,32 +203,45 @@ namespace Game2048.Models
                 var currentGridHolder = gridHolders[current];
                 var topGridHolder = gridHolders[top];
 
-                if (currentGridHolder.IsNull)
+                if (currentGridHolder.IsTempNull)
                 {
                     ++current;
                     continue;
                 }
 
-                var currentGridEntity = currentGridHolder.GridEntity;
+                var currentGridEntity = currentGridHolder.TempEntity;
 
-                if (topGridHolder.IsNull)
+                if (topGridHolder.IsTempNull)
                 {
-                    gridHolders[current].SetGridEntity(null);
-                    gridHolders[top].SetGridEntity(currentGridEntity);
+                    commands.Add(CreateMoveCommand(currentGridHolder, topGridHolder));
+
+                    gridHolders[current].TempEntity = null;
+                    gridHolders[top].TempEntity = currentGridEntity;
                     ++current;
                     continue;
                 }
 
-                var topGridEntity = topGridHolder.GridEntity;
+                var topGridEntity = topGridHolder.TempEntity;
 
-                if (currentGridEntity.TryMerge(topGridEntity))
+                if (currentGridEntity.CanMerge(topGridEntity))
                 {
-                    gridHolders[current].SetGridEntity(null);
-                    gridHolders[top].SetGridEntity(currentGridEntity);
+                    // 删除被合并方格
+                    commands.Add(CreateGridDeletionCommand(topGridHolder));
+
+                    // 移动合并方格
+                    commands.Add(CreateMoveCommand(currentGridHolder, topGridHolder));
+
+                    // 删除移动后的方格
+                    commands.Add(CreateGridDeletionCommand(topGridHolder));
+
+                    GridEntity newGridEntity = currentGridEntity.Merge(topGridEntity);
+
+                    // 创建新的合并后的方块
+                    commands.Add(CreateNewCreatedCommand(topGridHolder, newGridEntity));
+
+                    gridHolders[current].TempEntity = null;
+                    gridHolders[top].TempEntity = newGridEntity;
                     ++top;
-                    currentGridEntity.IsMerged = true;
-                    currentGridEntity.IsMoved = true;
-                    topGridEntity.IsBeMerged = true;
                     ++current;
                 }
                 else
@@ -210,6 +253,36 @@ namespace Game2048.Models
                     }
                 }
             }
+        }
+
+        private static GridMoveCommand CreateMoveCommand(GridHolder fromHolder, GridHolder toHolder)
+        {
+            return new GridMoveCommand()
+                {
+                    FromRow = fromHolder.Row,
+                    FromCol = fromHolder.Col,
+                    ToRow = toHolder.Row,
+                    ToCol = toHolder.Col
+                };
+        }
+
+        private static GridNewCreatedCommand CreateNewCreatedCommand(GridHolder holder, GridEntity newGridEntity)
+        {
+            return new GridNewCreatedCommand()
+                {
+                    Row = holder.Row,
+                    Col = holder.Col,
+                    NewGridEntity = newGridEntity
+                };
+        }
+
+        private static GridDeletionCommand CreateGridDeletionCommand(GridHolder holder)
+        {
+            return new GridDeletionCommand()
+                {
+                    Row = holder.Row,
+                    Col = holder.Col
+                };
         }
     }
 }

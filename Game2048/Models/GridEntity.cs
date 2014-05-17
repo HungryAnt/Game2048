@@ -14,7 +14,7 @@ namespace Game2048.Models
             Owner = owner;
         }
 
-        public int Value { get; set; }
+        public int Value { get; private set; }
 
         /// <summary>
         /// 是否进行了合并
@@ -31,14 +31,21 @@ namespace Game2048.Models
                 };
         }
 
-        public bool TryMerge(GridEntity other)
+        public bool CanMerge(GridEntity other)
         {
-            if (Value == other.Value)
+            return Value == other.Value;
+        }
+
+        public GridEntity Merge(GridEntity other)
+        {
+            if (Value != other.Value)
             {
-                Value *= 2;
-                return true;
+                throw new Exception("GridEntity Merge Error");
             }
-            return false;
+            return new GridEntity(null)
+                {
+                    Value = Value*2
+                };
         }
 
         /// <summary>

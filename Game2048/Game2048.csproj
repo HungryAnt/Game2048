@@ -56,7 +56,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DelegateCommand.cs" />
+    <Compile Include="Models\Commands\GridDeletionCommand.cs" />
+    <Compile Include="Models\Commands\GridNewCreatedCommand.cs" />
+    <Compile Include="Models\Commands\IGridActionCommand.cs" />
+    <Compile Include="Models\Commands\GridMoveCommand.cs" />
     <Compile Include="Models\GameManager.cs" />
+    <Compile Include="Models\MoveDirection.cs" />
     <Compile Include="NotificationObject.cs" />
     <Compile Include="ViewModels\GameStageViewModel.cs" />
     <Compile Include="ViewModels\GridState.cs" />

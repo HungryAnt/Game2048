@@ -12,10 +12,12 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ContentControl">
-                        <Border Background="BlueViolet">
-                            <Viewbox Margin="5">
-                                <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Viewbox>
+                        <Border Padding="10,10,0,0">
+                            <Border Background="#FFECE0C8">
+                                <Viewbox Margin="5">
+                                    <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Viewbox>
+                            </Border>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
@@ -29,7 +31,9 @@
             </Setter>
         </Style>
     </UserControl.Resources>
-    <Grid Background="AntiqueWhite">
-        <Canvas x:Name="gameStagePanel" Width="300" Height="300" HorizontalAlignment="Center" VerticalAlignment="Center"></Canvas>
+    <Grid>
+        <Border Background="#FFB8AF9E" CornerRadius="10" Padding="0,0,10,10">
+            <Canvas x:Name="gameStagePanel" Width="300" Height="300" HorizontalAlignment="Center" VerticalAlignment="Center"></Canvas>
+        </Border>
     </Grid>
 </UserControl>
